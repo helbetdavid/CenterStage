@@ -151,7 +151,7 @@ public class opmode extends LinearOpMode {
                     break;
                 case SCORRING:
                     target=1200; //MARITI DACA VRETI MAI SUS!!!
-                    if(gamepad1.a){
+                    if(gamepad2.a){
                         boxSv.setPosition(1); //VEDETI AICI CE POZITIE ARE CAND E DESCHIS!!!!!!!
                         wait(1000); //ASTEAPTA O SECUNDA DUPA CE SE DESCHIDE CUTIA
                         target = 0;
@@ -168,7 +168,7 @@ public class opmode extends LinearOpMode {
             }
 
             //FUNCTIE IN CAZ DE NU MERGE CEVA S AU S A BLOCAT CEVA SA INCEPETI PROCESUL DE LA CAPAT!!!!
-            if(gamepad1.dpad_down && robotState!= RobotState.START){
+            if(gamepad2.dpad_down && robotState!= RobotState.START){
                 robotState = RobotState.START;
             }
 
