@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -45,10 +46,9 @@ public class opmode extends LinearOpMode {
     public static double IntakeMidSvPos = 0.22;
 
     public static double LiftLowSvPos = 0;
-    public static double LiftHighSvPos = 0.9;
+    public static double LiftHighSvPos = 0.87;
 
-    boolean liftToggle = false;
-
+    ElapsedTime timer = new ElapsedTime();
 
 
     @Override
@@ -100,6 +100,7 @@ public class opmode extends LinearOpMode {
         leftIntakeSv.setPosition(0);
         rightIntakeSv.setPosition(0);
 
+
         waitForStart();
 
         if (isStopRequested()) return;
@@ -117,43 +118,49 @@ public class opmode extends LinearOpMode {
 
             switch (robotState){
                 case START:
+                    boxSv.setPosition(0.25);
                     leftIntakeSv.setPosition(IntakeMidSvPos);
                     rightIntakeSv.setPosition(IntakeMidSvPos);
-                    leftLiftSv.setPosition(0.50);
-                    rightLiftSv.setPosition(0.50);
+                    leftLiftSv.setPosition(0.90);
+                    rightLiftSv.setPosition(0.90);
+
                     if(gamepad2.x){
                         robotState = RobotState.COLLECTING;
                     }
                     break;
                 case COLLECTING:
-                    boxSv.setPosition(0); // VEDETI AICI CE POZITIE ARE cAND ESTE INCHIS DE PREFERAT 0
+                    boxSv.setPosition(0.25);
                     leftIntakeSv.setPosition(IntakeLowSvPos);
                     rightIntakeSv.setPosition(IntakeLowSvPos);
-                    wait(750); // Wait MARESTI  SE LOVESC SAU CEVAAAAAA!!!!!!!!!
                     leftLiftSv.setPosition(LiftLowSvPos);
                     rightLiftSv.setPosition(LiftLowSvPos);
-                    wait(200);
                     intakeBack.setPower(1);
                     if(gamepad2.y){
                         robotState = RobotState.NEUTRAL;
+                        leftLiftSv.setPosition(LiftHighSvPos);
+                        rightLiftSv.setPosition(LiftHighSvPos);
+                        timer.reset();
+
                     }
                     break;
                 case NEUTRAL:
+                    boxSv.setPosition(0.25);
                     intakeBack.setPower(0);
-                    leftLiftSv.setPosition(LiftHighSvPos);
-                    rightLiftSv.setPosition(LiftHighSvPos);
-                    wait(750);// Wait MARESTI  SE LOVESC SAU CEVAAAAAA!!!!!!!!!
-                    leftIntakeSv.setPosition(IntakeMidSvPos);
-                    rightIntakeSv.setPosition(IntakeMidSvPos);
+
+                    if(timer.seconds()>=0.8) {
+                        leftIntakeSv.setPosition(IntakeMidSvPos);
+                        rightIntakeSv.setPosition(IntakeMidSvPos);
+                    }
                     if(gamepad2.b){
                         robotState = RobotState.SCORRING;
+                        timer.reset();
                     }
                     break;
                 case SCORRING:
-                    target=1200; //MARITI DACA VRETI MAI SUS!!!
+                    boxSv.setPosition(0.25);
+                    target=1500; //MARITI DACA VRETI MAI SUS!!!
                     if(gamepad2.a){
-                        boxSv.setPosition(1); //VEDETI AICI CE POZITIE ARE CAND E DESCHIS!!!!!!!
-                        wait(1000); //ASTEAPTA O SECUNDA DUPA CE SE DESCHIDE CUTIA
+                        boxSv.setPosition(0); //VEDETI AICI CE POZITIE ARE CAND E DESCHIS!!!!!!!
                         target = 0;
                         robotState = RobotState.RETRACTING;
                     }
