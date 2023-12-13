@@ -58,11 +58,7 @@ public class lifttestFinal extends LinearOpMode {
             rightLift.setPower(rightLiftPower/denom);
             leftLift.setPower(leftLiftPower/denom);
 
-            telemetry.addData("target ", target);
-            telemetry.addData("pos ", liftPos);
-            telemetry.addData("leftPos", leftLift.getCurrentPosition());
-            telemetry.addData("rightPos", rightLift.getCurrentPosition());
-            telemetry.addData("relativeerror",motorRelativeError);
+
             telemetry.update();
 
         }

@@ -28,10 +28,10 @@ public class opmode extends LinearOpMode {
     Gamepad previousGamepad2 = new Gamepad();
 
     private PIDFController controller;
-    public static double p = 0.0035, i = 0.00002, d = 0.0002;
+    public static double p = 0.00365, i = 0.00002, d = 0.0002;
     public static double f = 0.00005;
     public static int target = 0;
-    public static double relatieP =0.0004;
+    public static double relatieP =0.0005;
 
     public enum RobotState{
         START,
@@ -45,8 +45,8 @@ public class opmode extends LinearOpMode {
     public static double IntakeLowSvPos = 0.55;
     public static double IntakeMidSvPos = 0.22;
 
-    public static double LiftLowSvPos = 0;
-    public static double LiftHighSvPos = 0.87;
+    public static double LiftLowSvPos = 0.17;
+    public static double LiftHighSvPos = 0.95;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -93,8 +93,6 @@ public class opmode extends LinearOpMode {
         leftLiftSv.setPosition(0.90);
         rightLiftSv.setPosition(0.90);
 
-        // Wait MARESTI DACA LA INT SE LOVESC SAU CEVAAAAAA!!!!!!!!!
-        sleep(750);
 
         // Set Intake servo's to IntakeMidSvPos.
         leftIntakeSv.setPosition(0);
@@ -118,7 +116,8 @@ public class opmode extends LinearOpMode {
 
             switch (robotState){
                 case START:
-                    boxSv.setPosition(0.25);
+                    boxSv.setPosition(0);
+                    target=0;
                     leftIntakeSv.setPosition(IntakeMidSvPos);
                     rightIntakeSv.setPosition(IntakeMidSvPos);
                     leftLiftSv.setPosition(0.90);
@@ -129,7 +128,8 @@ public class opmode extends LinearOpMode {
                     }
                     break;
                 case COLLECTING:
-                    boxSv.setPosition(0.25);
+                    boxSv.setPosition(0.1);
+
                     leftIntakeSv.setPosition(IntakeLowSvPos);
                     rightIntakeSv.setPosition(IntakeLowSvPos);
                     leftLiftSv.setPosition(LiftLowSvPos);
@@ -137,6 +137,8 @@ public class opmode extends LinearOpMode {
                     intakeBack.setPower(1);
                     if(gamepad2.y){
                         robotState = RobotState.NEUTRAL;
+                        leftLiftSv.setPosition(0.50);
+                        rightLiftSv.setPosition(0.50);
                         leftLiftSv.setPosition(LiftHighSvPos);
                         rightLiftSv.setPosition(LiftHighSvPos);
                         timer.reset();
@@ -144,7 +146,7 @@ public class opmode extends LinearOpMode {
                     }
                     break;
                 case NEUTRAL:
-                    boxSv.setPosition(0.25);
+                    boxSv.setPosition(0.1);
                     intakeBack.setPower(0);
 
                     if(timer.seconds()>=0.8) {
@@ -157,16 +159,20 @@ public class opmode extends LinearOpMode {
                     }
                     break;
                 case SCORRING:
-                    boxSv.setPosition(0.25);
-                    target=1500; //MARITI DACA VRETI MAI SUS!!!
-                    if(gamepad2.a){
+                    boxSv.setPosition(0.1);
+                    target=2250; //MARITI DACA VRETI MAI SUS!!!
+                    if(liftPos>=1400 && liftPos<=1515){
+
                         boxSv.setPosition(0); //VEDETI AICI CE POZITIE ARE CAND E DESCHIS!!!!!!!
+                    }
+                    if(gamepad2.a){
                         target = 0;
                         robotState = RobotState.RETRACTING;
+
                     }
                     break;
                 case RETRACTING:
-                    if(liftPos<=15){
+                    if(liftPos<=25){
                         robotState = RobotState.START;
                     }
                     break;
@@ -174,7 +180,6 @@ public class opmode extends LinearOpMode {
                     robotState = RobotState.START;
             }
 
-            //FUNCTIE IN CAZ DE NU MERGE CEVA S AU S A BLOCAT CEVA SA INCEPETI PROCESUL DE LA CAPAT!!!!
             if(gamepad2.dpad_down && robotState!= RobotState.START){
                 robotState = RobotState.START;
             }
@@ -196,6 +201,11 @@ public class opmode extends LinearOpMode {
 
 
             telemetry.addData("Stadiu Robot",robotState);
+            telemetry.addData("target ", target);
+            telemetry.addData("pos ", liftPos);
+            telemetry.addData("leftPos", leftLift.getCurrentPosition());
+            telemetry.addData("rightPos", rightLift.getCurrentPosition());
+            telemetry.addData("relativeerror",motorRelativeError);
             telemetry.update();
 
         }

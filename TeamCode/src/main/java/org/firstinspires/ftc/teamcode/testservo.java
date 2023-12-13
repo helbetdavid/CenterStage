@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.drm.DrmStore;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -29,13 +31,18 @@ public class testservo extends LinearOpMode {
 
         Servo boxSv = hardwareMap.get(Servo.class,"boxSv");
 
+        Servo leftLiftSv = hardwareMap.get(Servo.class,"leftLiftSv");
+        Servo rightLiftSv = hardwareMap.get(Servo.class,"rightLiftSv");
+
         waitForStart();
         if (isStopRequested()) return;
 
 
         while (opModeIsActive()) {
 
-            boxSv.setPosition(relatieP);
+            leftLiftSv.setPosition(relatieP);
+            rightLiftSv.setPosition(relatieP);
+
 
         }
 
