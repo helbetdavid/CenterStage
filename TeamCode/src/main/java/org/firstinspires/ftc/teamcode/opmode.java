@@ -46,7 +46,6 @@ public class opmode extends LinearOpMode {
 
     public static double IntakeLowSvPos = 0.55;
     public static double IntakeMidSvPos = 0.35;
-
     public static double LiftLowSvPos = 0.183;
     public static double LiftHighSvPos = 1;
 
