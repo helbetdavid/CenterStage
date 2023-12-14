@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-@Disabled
+
 @Config
 @TeleOp
 
@@ -59,6 +59,11 @@ public class lifttestFinal extends LinearOpMode {
             leftLift.setPower(leftLiftPower/denom);
 
 
+            telemetry.addData("target ", target);
+            telemetry.addData("pos ", liftPos);
+            telemetry.addData("leftPos", leftLift.getCurrentPosition());
+            telemetry.addData("rightPos", rightLift.getCurrentPosition());
+            telemetry.addData("relativeerror",motorRelativeError);
             telemetry.update();
 
         }

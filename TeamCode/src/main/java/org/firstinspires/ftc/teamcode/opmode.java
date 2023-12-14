@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Boolean.TRUE;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -28,10 +30,10 @@ public class opmode extends LinearOpMode {
     Gamepad previousGamepad2 = new Gamepad();
 
     private PIDFController controller;
-    public static double p = 0.00365, i = 0.00002, d = 0.0002;
+    public static double p = 0.00377, i = 0.00002, d = 0.0002;
     public static double f = 0.00005;
     public static int target = 0;
-    public static double relatieP =0.0005;
+    public static double relatieP =0.0006;
 
     public enum RobotState{
         START,
@@ -43,10 +45,10 @@ public class opmode extends LinearOpMode {
     RobotState robotState= RobotState.START;
 
     public static double IntakeLowSvPos = 0.55;
-    public static double IntakeMidSvPos = 0.22;
+    public static double IntakeMidSvPos = 0.35;
 
-    public static double LiftLowSvPos = 0.17;
-    public static double LiftHighSvPos = 0.95;
+    public static double LiftLowSvPos = 0.18;
+    public static double LiftHighSvPos = 1;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -77,7 +79,6 @@ public class opmode extends LinearOpMode {
         // Servos Lift
         Servo leftLiftSv = hardwareMap.get(Servo.class,"leftLiftSv");
         Servo rightLiftSv = hardwareMap.get(Servo.class,"rightLiftSv");
-        Servo boxSv = hardwareMap.get(Servo.class,"boxSv");
 
         // Reverse Motors
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -116,37 +117,32 @@ public class opmode extends LinearOpMode {
 
             switch (robotState){
                 case START:
-                    boxSv.setPosition(0);
+                    intakeBack.setPower(0);
                     target=0;
                     leftIntakeSv.setPosition(IntakeMidSvPos);
                     rightIntakeSv.setPosition(IntakeMidSvPos);
-                    leftLiftSv.setPosition(0.90);
-                    rightLiftSv.setPosition(0.90);
+                    leftLiftSv.setPosition(0.60);
+                    rightLiftSv.setPosition(0.60);
 
                     if(gamepad2.x){
                         robotState = RobotState.COLLECTING;
                     }
                     break;
                 case COLLECTING:
-                    boxSv.setPosition(0.1);
-
                     leftIntakeSv.setPosition(IntakeLowSvPos);
                     rightIntakeSv.setPosition(IntakeLowSvPos);
                     leftLiftSv.setPosition(LiftLowSvPos);
                     rightLiftSv.setPosition(LiftLowSvPos);
-                    intakeBack.setPower(1);
+                    intakeBack.setPower(0.80);
                     if(gamepad2.y){
                         robotState = RobotState.NEUTRAL;
-                        leftLiftSv.setPosition(0.50);
-                        rightLiftSv.setPosition(0.50);
-                        leftLiftSv.setPosition(LiftHighSvPos);
-                        rightLiftSv.setPosition(LiftHighSvPos);
+                        leftLiftSv.setPosition(0.39);
+                        rightLiftSv.setPosition(0.39);
                         timer.reset();
 
                     }
                     break;
                 case NEUTRAL:
-                    boxSv.setPosition(0.1);
                     intakeBack.setPower(0);
 
                     if(timer.seconds()>=0.8) {
@@ -159,11 +155,11 @@ public class opmode extends LinearOpMode {
                     }
                     break;
                 case SCORRING:
-                    boxSv.setPosition(0.1);
                     target=2250; //MARITI DACA VRETI MAI SUS!!!
                     if(liftPos>=1400 && liftPos<=1515){
+                        leftLiftSv.setPosition(1);
+                        rightLiftSv.setPosition(1);
 
-                        boxSv.setPosition(0); //VEDETI AICI CE POZITIE ARE CAND E DESCHIS!!!!!!!
                     }
                     if(gamepad2.a){
                         target = 0;
@@ -184,6 +180,7 @@ public class opmode extends LinearOpMode {
                 robotState = RobotState.START;
             }
 
+
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
@@ -194,10 +191,19 @@ public class opmode extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            leftFront.setPower(frontLeftPower);
-            leftRear.setPower(backLeftPower);
-            rightFront.setPower(frontRightPower);
-            rightRear.setPower(backRightPower);
+
+            if(gamepad1.right_bumper!=TRUE){
+                leftFront.setPower(frontLeftPower);
+                leftRear.setPower(backLeftPower);
+                rightFront.setPower(frontRightPower);
+                rightRear.setPower(backRightPower);
+            }
+            else{
+                leftFront.setPower(frontLeftPower/4.5);
+                leftRear.setPower(backLeftPower/4.5);
+                rightFront.setPower(frontRightPower/4.5);
+                rightRear.setPower(backRightPower/4.5);
+            }
 
 
             telemetry.addData("Stadiu Robot",robotState);

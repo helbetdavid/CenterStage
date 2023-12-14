@@ -29,7 +29,6 @@ public class testservo extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Servo boxSv = hardwareMap.get(Servo.class,"boxSv");
 
         Servo leftLiftSv = hardwareMap.get(Servo.class,"leftLiftSv");
         Servo rightLiftSv = hardwareMap.get(Servo.class,"rightLiftSv");
