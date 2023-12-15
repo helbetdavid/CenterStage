@@ -46,8 +46,8 @@ public class opmode extends LinearOpMode {
 
     public static double IntakeLowSvPos = 0.55;
     public static double IntakeMidSvPos = 0.35;
-    public static double LiftLowSvPos = 0.183;
-    public static double LiftHighSvPos = 1;
+    public static double LiftLowSvPos = 0.14    ;
+    public static double LiftHighSvPos = 0.95;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -90,8 +90,8 @@ public class opmode extends LinearOpMode {
 
 
         // Set Lift servo's to 0.55 IDLE.
-        leftLiftSv.setPosition(0.90);
-        rightLiftSv.setPosition(0.90);
+        leftLiftSv.setPosition(0.70);
+        rightLiftSv.setPosition(0.70);
 
 
         // Set Intake servo's to IntakeMidSvPos.
@@ -135,8 +135,8 @@ public class opmode extends LinearOpMode {
                     intakeBack.setPower(0.80);
                     if(gamepad2.y){
                         robotState = RobotState.NEUTRAL;
-                        leftLiftSv.setPosition(0.4);
-                        rightLiftSv.setPosition(0.4);
+                        leftLiftSv.setPosition(0.3);
+                        rightLiftSv.setPosition(0.3);
                         timer.reset();
 
                     }
